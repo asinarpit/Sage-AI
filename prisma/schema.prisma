@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String?  @unique
+
+  documents Document[]
+  chats     Chat[]
+
+  createdAt DateTime @default(now())
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  title     String
+  type      DocumentType
+  source    String?  // URL or filename
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  chunks    Chunk[]
+  chats     Chat[]
+
+  createdAt DateTime @default(now())
+}
+
+enum DocumentType {
+  PDF
+  URL
+  NOTE
+}
+
+model Chunk {
+  id          String   @id @default(cuid())
+  content     String
+
+  embeddingId String?  // vector DB reference (Pinecone/Supabase)
+
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Chat {
+  id          String   @id @default(cuid())
+  title       String?
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  documentId  String?
+  document    Document? @relation(fields: [documentId], references: [id])
+
+  messages    Message[]
+
+  createdAt   DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+
+  role      MessageRole
+  content   String
+
+  chatId    String
+  chat      Chat     @relation(fields: [chatId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
