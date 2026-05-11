@@ -248,9 +248,9 @@ export default function WorkspacePage() {
         <div className="p-3 bg-primary/[0.03] rounded-xl border border-primary/10 flex gap-3 group hover:bg-primary/[0.05] transition-colors relative z-10">
           <LucideZap className="w-4 h-4 text-primary shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
           <div className="text-[11px] space-y-0.5">
-            <p className="font-bold text-foreground">Pro Tip</p>
+            <p className="font-bold text-foreground">Workspace Tips</p>
             <p className="text-muted-foreground/90 leading-normal">
-              Select multiple sources to compare information across documents.
+              Select multiple sources to compare documents, or <span className="text-primary font-semibold">drag a source to the bottom</span> to delete it.
             </p>
           </div>
         </div>

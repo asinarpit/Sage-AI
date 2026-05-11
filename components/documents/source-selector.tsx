@@ -117,7 +117,7 @@ export function SourceSelector({
                   )}
                 </div>
                 <div className="flex-1 min-w-0 pr-1">
-                  <p className="text-[12px] font-bold text-foreground truncate leading-tight">{doc.title}</p>
+                  <p className="text-[12px] font-bold text-foreground break-words line-clamp-2 leading-tight">{doc.title}</p>
                   <p className="text-[9px] text-muted-foreground font-medium truncate mt-0.5 uppercase tracking-tighter">
                     {doc.type} • {new Date(doc.createdAt).toLocaleDateString()}
                   </p>
