@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { LucideFileText, LucideGlobe, LucideSearch, LucideLoader2, LucidePlus } from "lucide-react";
+import { LucideFileText, LucideGlobe, LucideSearch, LucideLoader2, LucidePlus, LucideTrash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { toast } from "sonner";
 
 interface Document {
   id: string;
@@ -16,9 +17,11 @@ interface Document {
 }
 
 export function SourceSelector({ 
-  onSelectionChange 
+  onSelectionChange,
+  onDragStateChange 
 }: { 
-  onSelectionChange: (ids: string[]) => void 
+  onSelectionChange: (ids: string[]) => void;
+  onDragStateChange?: (isDragging: boolean) => void;
 }) {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,6 +49,15 @@ export function SourceSelector({
   const filteredDocs = documents.filter(doc => 
     doc.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    e.dataTransfer.setData("documentId", id);
+    onDragStateChange?.(true);
+  };
+
+  const handleDragEnd = () => {
+    onDragStateChange?.(false);
+  };
 
   return (
     <div className="flex flex-col h-full space-y-4 overflow-hidden">
@@ -81,8 +93,11 @@ export function SourceSelector({
             filteredDocs.map((doc) => (
               <div
                 key={doc.id}
+                draggable
+                onDragStart={(e) => handleDragStart(e, doc.id)}
+                onDragEnd={handleDragEnd}
                 onClick={() => toggleDocument(doc.id)}
-                className={`group flex items-center gap-3 p-2.5 rounded-xl border transition-all duration-200 cursor-pointer w-full overflow-hidden ${
+                className={`group flex items-center gap-3 p-2.5 rounded-xl border transition-all duration-200 cursor-grab active:cursor-grabbing w-full overflow-hidden ${
                   selectedIds.includes(doc.id) 
                     ? "bg-primary/[0.04] border-primary/30 shadow-sm" 
                     : "bg-transparent border-transparent hover:bg-primary/[0.02] hover:border-primary/10"
@@ -107,14 +122,16 @@ export function SourceSelector({
                     {doc.type} • {new Date(doc.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-                <Checkbox 
-                  checked={selectedIds.includes(doc.id)} 
-                  className={`h-4 w-4 rounded-full transition-all shrink-0 ${
-                    selectedIds.includes(doc.id)
-                      ? "border-primary bg-primary"
-                      : "opacity-0 group-hover:opacity-100 border-primary/30"
-                  }`}
-                />
+                <div className="flex items-center gap-1">
+                  <Checkbox 
+                    checked={selectedIds.includes(doc.id)} 
+                    className={`h-4 w-4 rounded-full transition-all shrink-0 ${
+                      selectedIds.includes(doc.id)
+                        ? "border-primary bg-primary"
+                        : "opacity-0 group-hover:opacity-100 border-primary/30"
+                    }`}
+                  />
+                </div>
               </div>
             ))
           )}

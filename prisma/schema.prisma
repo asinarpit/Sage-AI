@@ -52,7 +52,7 @@ model Chunk {
   embeddingId String?  // vector DB reference (Pinecone/Supabase)
 
   documentId  String
-  document    Document @relation(fields: [documentId], references: [id])
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
@@ -65,7 +65,7 @@ model Chat {
   user        User     @relation(fields: [userId], references: [id])
 
   documentId  String?
-  document    Document? @relation(fields: [documentId], references: [id])
+  document    Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   messages    Message[]
 
@@ -79,7 +79,7 @@ model Message {
   content   String
 
   chatId    String
-  chat      Chat     @relation(fields: [chatId], references: [id])
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
