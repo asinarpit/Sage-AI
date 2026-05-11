@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { useChat, type UIMessage } from "@ai-sdk/react";
 import { DefaultChatTransport, isToolUIPart } from "ai";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -236,7 +237,32 @@ export function ChatInterface({
                       if (msg.role === "assistant" && part.text) {
                         return (
                           <div key={`${msg.id}-${i}`} className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:font-bold prose-code:bg-muted/50 prose-code:rounded prose-code:text-[11px] prose-pre:bg-muted/30 prose-pre:rounded-xl">
-                            <ReactMarkdown>{part.text}</ReactMarkdown>
+                            <ReactMarkdown 
+                              remarkPlugins={[remarkGfm]}
+                              components={{
+                                table: ({ ...props }) => (
+                                  <div className="my-6 w-full overflow-hidden rounded-xl border border-primary/10 shadow-sm">
+                                    <div className="overflow-x-auto">
+                                      <table className="w-full border-collapse text-left" {...props} />
+                                    </div>
+                                  </div>
+                                ),
+                                thead: ({ ...props }) => (
+                                  <thead className="bg-primary/[0.04] border-b border-primary/10" {...props} />
+                                ),
+                                th: ({ ...props }) => (
+                                  <th className="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80" {...props} />
+                                ),
+                                td: ({ ...props }) => (
+                                  <td className="px-4 py-3 text-[12px] border-b border-primary/5 last:border-0 font-medium" {...props} />
+                                ),
+                                tr: ({ ...props }) => (
+                                  <tr className="hover:bg-primary/[0.02] transition-colors last:border-0" {...props} />
+                                ),
+                              }}
+                            >
+                              {part.text}
+                            </ReactMarkdown>
                           </div>
                         );
                       }
