@@ -2,7 +2,7 @@
 
 An advanced, production-grade AI Research Assistant built with **Next.js 15**, **Vercel AI SDK**, and **Google Gemini**. Sage goes beyond basic "Chat with PDF" applications by implementing a multi-stage hybrid search pipeline and autonomous agentic behavior.
 
-![Project Preview]<img width="1917" height="862" alt="image" src="https://github.com/user-attachments/assets/4f91b272-fd34-402d-8a1e-fe1198115b55" />
+<img width="1917" height="862" alt="image" src="https://github.com/user-attachments/assets/4f91b272-fd34-402d-8a1e-fe1198115b55" />
 
 
 ## ✨ Key Features
